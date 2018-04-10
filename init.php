@@ -33,7 +33,7 @@ class Douban extends Plugin {
                 }
             }
 
-            echo 'article', $article["content"]
+            echo 'article', $article["content"];
 
             $feed = json_decode($article["content"], true);
             if ($feed !== NULL) {
