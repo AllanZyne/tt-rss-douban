@@ -24,6 +24,15 @@ class Douban extends Plugin {
         $parts = parse_url($article["site_url"]);
 
         if ($parts["host"] == "www.douban.com") {
+
+            $constants = get_defined_constants(true);
+            $json_errors = array();
+            foreach ($constants["json"] as $name => $value) {
+                if (!strncmp($name, "JSON_ERROR_", 11)) {
+                    $json_errors[$value] = $name;
+                }
+            }
+
             $feed = json_decode($article["content"], true);
             if ($feed !== NULL) {
                 $blocks = $feed["blocks"];
@@ -36,12 +45,14 @@ class Douban extends Plugin {
                     } else if ($block["type"] == "atomic") {
 
                     } else {
+                        var_dump($article["content"]);
                         $content = $content . "<p>" . $block["text"] . "</p>";
                     }
                 }
                 $article["content"] = $content;
             } else {
-                $article["content"] = var_export($article["content"], true);
+                echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
+                // $article["content"] = var_export($article["content"], true);
             }
         }
 
