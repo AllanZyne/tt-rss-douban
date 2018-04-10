@@ -54,7 +54,7 @@ class Douban extends Plugin {
             } else {
                 var_dump($article["content"]);
                 echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
-                // $article["content"] = var_export($article["content"], true);
+                $article["content"] = "Content: " . $article["content"];
             }
         }
 
