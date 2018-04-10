@@ -33,6 +33,8 @@ class Douban extends Plugin {
                 }
             }
 
+            echo 'article', $article["content"]
+
             $feed = json_decode($article["content"], true);
             if ($feed !== NULL) {
                 $blocks = $feed["blocks"];
@@ -45,12 +47,12 @@ class Douban extends Plugin {
                     } else if ($block["type"] == "atomic") {
 
                     } else {
-                        var_dump($article["content"]);
                         $content = $content . "<p>" . $block["text"] . "</p>";
                     }
                 }
                 $article["content"] = $content;
             } else {
+                var_dump($article["content"]);
                 echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
                 // $article["content"] = var_export($article["content"], true);
             }
