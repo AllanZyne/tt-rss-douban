@@ -1,12 +1,12 @@
 <?php
-class Example_Article extends Plugin {
+class Douban extends Plugin {
 
 	private $host;
 
 	function about() {
 		return array(1.0,
 			"Example plugin for HOOK_RENDER_ARTICLE",
-			"douban",
+			"Allan Zyne",
 			true);
 	}
 
