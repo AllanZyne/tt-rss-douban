@@ -5,7 +5,7 @@ class Douban extends Plugin {
 
     function about() {
         return array(1.0,
-            "Example plugin for HOOK_RENDER_ARTICLE",
+            "Example plugin for HOOK_ARTICLE_FILTER",
             "Allan Zyne",
             true);
     }
@@ -13,15 +13,15 @@ class Douban extends Plugin {
     function init($host) {
         $this->host = $host;
 
-        $host->add_hook($host::HOOK_RENDER_ARTICLE, $this);
+        $host->add_hook($host::HOOK_ARTICLE_FILTER, $this);
     }
 
     function get_prefs_js() {
         return file_get_contents(dirname(__FILE__) . "/init.js");
     }
 
-    function hook_render_article($article) {
-        $parts = parse_url($article["site_url"]);
+    function hook_article_filter($article) {
+        $parts = parse_url($article["feed"]["site_url"]);
 
         if ($parts["host"] == "www.douban.com") {
 
@@ -33,7 +33,7 @@ class Douban extends Plugin {
                 }
             }
 
-            echo 'article', $article["content"];
+            echo 'article: ', $article["content"];
 
             $feed = json_decode($article["content"], true);
             if ($feed !== NULL) {
