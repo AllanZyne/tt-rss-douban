@@ -6,7 +6,7 @@ class Example_Article extends Plugin {
 	function about() {
 		return array(1.0,
 			"Example plugin for HOOK_RENDER_ARTICLE",
-			"fox",
+			"douban",
 			true);
 	}
 
