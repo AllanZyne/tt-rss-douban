@@ -21,7 +21,7 @@ class Douban extends Plugin {
 	}
 
 	function hook_render_article($article) {
-		$article["content"] = "Content changed: " . $article["content"];
+		$article["content"] = "Content changed: " . $article["site_url"] . " " . $article["content"];
 
 		return $article;
 	}
