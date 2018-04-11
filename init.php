@@ -5,7 +5,7 @@ class Douban extends Plugin {
 
     function about() {
         return array(1.0,
-            "Example plugin for HOOK_RENDER_ARTICLE",
+            "Example plugin for HOOK_ARTICLE_FILTER",
             "Allan Zyne",
             true);
     }
@@ -13,15 +13,19 @@ class Douban extends Plugin {
     function init($host) {
         $this->host = $host;
 
-        $host->add_hook($host::HOOK_RENDER_ARTICLE, $this);
+        $host->add_hook($host::HOOK_ARTICLE_FILTER, $this);
     }
 
     function get_prefs_js() {
         return file_get_contents(dirname(__FILE__) . "/init.js");
     }
 
-    function hook_render_article($article) {
-        $parts = parse_url($article["site_url"]);
+    function hook_article_filter($article) {
+        $parts = parse_url($article["feed"]["site_url"]);
+
+        echo 'article: ', $article["content"];
+
+        var_dump($article["content"]);
 
         if ($parts["host"] == "www.douban.com") {
 
@@ -33,11 +37,7 @@ class Douban extends Plugin {
                 }
             }
 
-            $article_content = substr($article["content"], 3, count($article["content"])-7);
-
-            echo 'article: ', $article_content;
-
-            $feed = json_decode($article_content, true);
+            $feed = json_decode($article["content"], true);
             if ($feed !== NULL) {
                 $blocks = $feed["blocks"];
                 $blocks_len = count($blocks);
@@ -54,11 +54,13 @@ class Douban extends Plugin {
                 }
                 $article["content"] = $content;
             } else {
-                // var_dump($article["content"]);
                 echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
-                // $article["content"] = var_export($article["content"], true);
+                $article["content"] = "Content: " . $article["content"];
             }
         }
+        // else {
+        //     $article["content"] = "Content: " . $article["feed"]["site_url"];
+        // }
 
         return $article;
     }
