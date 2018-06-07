@@ -1,4 +1,12 @@
 <?php
+function debug_to_console( $data ) {
+    $output = $data;
+    if ( is_array( $output ) )
+        $output = implode( ',', $output);
+
+    echo "<script>console.log( 'Debug Objects: " . $output . "' );</script>";
+}
+
 class Douban extends Plugin {
 
     private $host;
@@ -36,6 +44,8 @@ class Douban extends Plugin {
                     $json_errors[$value] = $name;
                 }
             }
+
+            debug_to_console($article["content"]);
 
             $feed = json_decode($article["content"], true);
             if ($feed !== NULL) {
