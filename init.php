@@ -39,44 +39,48 @@ class Douban extends Plugin {
         $site_url = $article["site_url"];
         $parts = parse_url($site_url);
 
+        $article["content"] = $content;
+
+        echo 'content: ', $content;
+
         // echo 'article: ', $article["content"];
 
         // var_dump($article["content"]);
 
         // if ($parts["host"] == "www.douban.com") {
 
-            $constants = get_defined_constants(true);
-            $json_errors = array();
-            foreach ($constants["json"] as $name => $value) {
-                if (!strncmp($name, "JSON_ERROR_", 11)) {
-                    $json_errors[$value] = $name;
-                }
-            }
+            // $constants = get_defined_constants(true);
+            // $json_errors = array();
+            // foreach ($constants["json"] as $name => $value) {
+            //     if (!strncmp($name, "JSON_ERROR_", 11)) {
+            //         $json_errors[$value] = $name;
+            //     }
+            // }
 
         //     debug_to_console($article["content"]);
 
-            echo 'article ', $article["content"];
+            // echo 'article ', $content;
 
-            $feed = json_decode($content, true);
+            // $feed = json_decode($content, true);
 
-            echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
+            // echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
         
-            if ($feed !== NULL) {
-                $blocks = $feed["blocks"];
-                $blocks_len = count($blocks);
-                $content = "";
-                for ($i = 0; $i < $blocks_len; $i++) {
-                    $block = $blocks[i];
-                    if ($block["type"] == "header-four") {
-                        $content = $content . "<h4>" . $block["text"] . "</h4>";
-                    } else if ($block["type"] == "atomic") {
+            // if ($feed !== NULL) {
+            //     $blocks = $feed["blocks"];
+            //     $blocks_len = count($blocks);
+            //     $content = "";
+            //     for ($i = 0; $i < $blocks_len; $i++) {
+            //         $block = $blocks[i];
+            //         if ($block["type"] == "header-four") {
+            //             $content = $content . "<h4>" . $block["text"] . "</h4>";
+            //         } else if ($block["type"] == "atomic") {
 
-                    } else {
-                        $content = $content . "<p>" . $block["text"] . "</p>";
-                    }
-                }
-                $article["content"] = $content;
-            }
+            //         } else {
+            //             $content = $content . "<p>" . $block["text"] . "</p>";
+            //         }
+            //     }
+            //     $article["content"] = $content;
+            // }
 
         //     } else {
         //         echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
