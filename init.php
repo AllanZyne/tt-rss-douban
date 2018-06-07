@@ -45,18 +45,21 @@ class Douban extends Plugin {
 
         // if ($parts["host"] == "www.douban.com") {
 
-        //     $constants = get_defined_constants(true);
-        //     $json_errors = array();
-        //     foreach ($constants["json"] as $name => $value) {
-        //         if (!strncmp($name, "JSON_ERROR_", 11)) {
-        //             $json_errors[$value] = $name;
-        //         }
-        //     }
+            $constants = get_defined_constants(true);
+            $json_errors = array();
+            foreach ($constants["json"] as $name => $value) {
+                if (!strncmp($name, "JSON_ERROR_", 11)) {
+                    $json_errors[$value] = $name;
+                }
+            }
 
         //     debug_to_console($article["content"]);
 
+            echo 'article ', $article["content"];
 
             $feed = json_decode($content, true);
+
+            echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
         
             if ($feed !== NULL) {
                 $blocks = $feed["blocks"];
