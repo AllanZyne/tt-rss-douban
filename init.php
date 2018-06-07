@@ -31,11 +31,13 @@ class Douban extends Plugin {
 
     function hook_render_article($article) {
     // function hook_article_filter($article) {
-        $content = substr($article["content"], 210, -18);
-
+        $content = substr($article["content"], 210, -19);
+        
         debug_to_console($content);
 
-        // $parts = parse_url($article["feed"]["site_url"]);
+        // $article["feed"]["site_url"]
+        $site_url = $article["site_url"];
+        $parts = parse_url($site_url);
 
         // echo 'article: ', $article["content"];
 
@@ -53,22 +55,25 @@ class Douban extends Plugin {
 
         //     debug_to_console($article["content"]);
 
-        //     $feed = json_decode($article["content"], true);
-        //     if ($feed !== NULL) {
-        //         $blocks = $feed["blocks"];
-        //         $blocks_len = count($blocks);
-        //         $content = "";
-        //         for ($i = 0; $i < $blocks_len; $i++) {
-        //             $block = $blocks[i];
-        //             if ($block["type"] == "header-four") {
-        //                 $content = $content . "<h4>" . $block["text"] . "</h4>";
-        //             } else if ($block["type"] == "atomic") {
+            $feed = json_decode($content, true);
+        
+            if ($feed !== NULL) {
+                $blocks = $feed["blocks"];
+                $blocks_len = count($blocks);
+                $content = "";
+                for ($i = 0; $i < $blocks_len; $i++) {
+                    $block = $blocks[i];
+                    if ($block["type"] == "header-four") {
+                        $content = $content . "<h4>" . $block["text"] . "</h4>";
+                    } else if ($block["type"] == "atomic") {
 
-        //             } else {
-        //                 $content = $content . "<p>" . $block["text"] . "</p>";
-        //             }
-        //         }
-        //         $article["content"] = $content;
+                    } else {
+                        $content = $content . "<p>" . $block["text"] . "</p>";
+                    }
+                }
+                $article["content"] = $content;
+            }
+
         //     } else {
         //         echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
         //         $article["content"] = "Content: " . $article["content"];
