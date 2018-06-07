@@ -31,7 +31,8 @@ class Douban extends Plugin {
 
     function hook_render_article($article) {
     // function hook_article_filter($article) {
-        $content = substr($article["content"], 198);
+        $content = substr($article["content"], 210, -18);
+
         debug_to_console($content);
 
         // $parts = parse_url($article["feed"]["site_url"]);
