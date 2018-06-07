@@ -3,8 +3,7 @@ function debug_to_console($article, $data ) {
     $output = $data;
     if ( is_array( $output ) )
         $output = implode( ',', $output);
-
-    $article['content'] = $article['content'] . "<script>console.log( 'debug:" . $output . "' );</script>";
+    $article["content"] = $output ;
 }
 
 class Douban extends Plugin {
@@ -30,36 +29,38 @@ class Douban extends Plugin {
     }
 
     function hook_render_article($article) {
-        // 
-        
-
-        // $article["feed"]["site_url"]
         $site_url = $article["site_url"];
         $parts = parse_url($site_url);
 
-        debug_to_console($article, $site_url);
-
         if ($parts["host"] == "www.douban.com") {
-            $content = substr($article["content"], 210, -19);
+	    $article_content = $article["content"];
 
-            debug_to_console($article, $content);
+            $article["content"] = 'Debug: ';
 
-            // $constants = get_defined_constants(true);
-            // $json_errors = array();
-            // foreach ($constants["json"] as $name => $value) {
-            //     if (!strncmp($name, "JSON_ERROR_", 11)) {
-            //         $json_errors[$value] = $name;
-            //     }
-            // }
+            $content = trim(substr($article_content, 210, -19));
 
-        //     debug_to_console($article["content"]);
 
-            // echo 'article ', $content;
+            $constants = get_defined_constants(true);
+            $json_errors = array();
+            foreach ($constants["json"] as $name => $value) {
+                if (!strncmp($name, "JSON_ERROR_", 11)) {
+                    $json_errors[$value] = $name;
+                }
+            }
 
-            // $feed = json_decode($content, true);
+for ($i = 0; $i <= 31; ++$i) { 
+    $content = str_replace(chr($i), "", $content); 
+}
+$content = str_replace(chr(127), "", $content);
 
-            // echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
-        
+            $article["content"] = $article["content"] . "<pre>" . $content . "</pre>";
+
+
+            $feed = json_decode($content, true);
+
+            $article["content"] = $article["content"] . "<p>" . $json_errors[json_last_error()] . "</p>";
+
+
             // if ($feed !== NULL) {
             //     $blocks = $feed["blocks"];
             //     $blocks_len = count($blocks);
