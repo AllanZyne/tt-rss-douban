@@ -1,10 +1,10 @@
 <?php
-function debug_to_console( $data ) {
+function debug_to_console($article, $data ) {
     $output = $data;
     if ( is_array( $output ) )
         $output = implode( ',', $output);
 
-    echo "<script>console.log( 'Debug Objects: " . $output . "' );</script>";
+    $article['content'] = $article['content'] . "<script>console.log( 'debug:" . $output . "' );</script>";
 }
 
 class Douban extends Plugin {
@@ -30,24 +30,19 @@ class Douban extends Plugin {
     }
 
     function hook_render_article($article) {
-    // function hook_article_filter($article) {
-        $content = substr($article["content"], 210, -19);
+        // 
         
-        // debug_to_console($content);
 
         // $article["feed"]["site_url"]
         $site_url = $article["site_url"];
         $parts = parse_url($site_url);
 
-        $article["content"] = $content;
+        debug_to_console($article, $site_url);
 
-        echo 'content: ', $content;
+        if ($parts["host"] == "www.douban.com") {
+            $content = substr($article["content"], 210, -19);
 
-        // echo 'article: ', $article["content"];
-
-        // var_dump($article["content"]);
-
-        // if ($parts["host"] == "www.douban.com") {
+            debug_to_console($article, $content);
 
             // $constants = get_defined_constants(true);
             // $json_errors = array();
@@ -86,10 +81,9 @@ class Douban extends Plugin {
         //         echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
         //         $article["content"] = "Content: " . $article["content"];
         //     }
-        // }
-        // else {
-        //     $article["content"] = "Content: " . $article["feed"]["site_url"];
-        // }
+        } else {
+            // $article["content"] = "Content: " . $article["feed"]["site_url"];
+        }
 
         return $article;
     }
