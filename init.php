@@ -33,7 +33,7 @@ class Douban extends Plugin {
     // function hook_article_filter($article) {
         $content = substr($article["content"], 210, -19);
         
-        debug_to_console($content);
+        // debug_to_console($content);
 
         // $article["feed"]["site_url"]
         $site_url = $article["site_url"];
@@ -54,6 +54,7 @@ class Douban extends Plugin {
         //     }
 
         //     debug_to_console($article["content"]);
+
 
             $feed = json_decode($content, true);
         
