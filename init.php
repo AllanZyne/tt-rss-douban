@@ -30,7 +30,7 @@ class Douban extends Plugin {
     function parse_feed($feed) {
         $blocks = $feed["blocks"];
         $blocks_len = count($blocks);
-        $content = "<p>parse feed</p><br>";
+        $content = "";
         for ($i = 0; $i < $blocks_len; $i++) {
             $block = $blocks[$i];
             if ($block["type"] == "header-four") {
