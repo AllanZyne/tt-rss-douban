@@ -42,12 +42,12 @@ class Douban extends Plugin {
         for ($i = 0; $i < $blocks_len; $i++) {
             $block = $blocks[i];
             if ($block["type"] == "header-four") {
-                $text = str_replace('\n', '<br>', $block["text"])
+                $text = str_replace('\n', '<br>', $block["text"]);
                 $content = $content . "<h4>" . $text . "</h4>";
             } else if ($block["type"] == "atomic") {
 
             } else {
-                $text = str_replace('\n', '<br>', $block["text"])
+                $text = str_replace('\n', '<br>', $block["text"]);
                 $content = $content . "<p>" . $text . "</p>";
             }
         }
