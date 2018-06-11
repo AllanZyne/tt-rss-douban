@@ -38,16 +38,16 @@ class Douban extends Plugin {
     {
         $blocks = $feed["blocks"];
         $blocks_len = count($blocks);
-        $content = "";
+        $content = "<p>parse feed</p><br>";
         for ($i = 0; $i < $blocks_len; $i++) {
-            $block = $blocks[i];
+            $block = $blocks[$i];
             if ($block["type"] == "header-four") {
-                $text = str_replace('\n', '<br>', $block["text"]);
+                $text = nl2br($block["text"]);
                 $content = $content . "<h4>" . $text . "</h4>";
             } else if ($block["type"] == "atomic") {
 
             } else {
-                $text = str_replace('\n', '<br>', $block["text"]);
+                $text = nl2br($block["text"]);
                 $content = $content . "<p>" . $text . "</p>";
             }
         }
@@ -72,7 +72,7 @@ class Douban extends Plugin {
             $feed = json_decode($content, true);
 
             if (json_last_error() == JSON_ERROR_NONE) {
-                $article["content"] = $article["content"] . parse_feed($feed);
+                $article["content"] = $article["content"] . $this->parse_feed($feed);
             } else {
                 $constants = get_defined_constants(true);
                 $json_errors = array();
