@@ -1,5 +1,6 @@
 <?php
-function debug_to_console($article, $data ) {
+function debug_to_console($article, $data)
+{
     $output = $data;
     if ( is_array( $output ) )
         $output = implode( ',', $output);
@@ -33,6 +34,26 @@ class Douban extends Plugin {
         return file_get_contents(dirname(__FILE__) . "/init.js");
     }
 
+    function parse_feed($feed)
+    {
+        $blocks = $feed["blocks"];
+        $blocks_len = count($blocks);
+        $content = "";
+        for ($i = 0; $i < $blocks_len; $i++) {
+            $block = $blocks[i];
+            if ($block["type"] == "header-four") {
+                $text = str_replace('\n', '<br>', $block["text"])
+                $content = $content . "<h4>" . $text . "</h4>";
+            } else if ($block["type"] == "atomic") {
+
+            } else {
+                $text = str_replace('\n', '<br>', $block["text"])
+                $content = $content . "<p>" . $text . "</p>";
+            }
+        }
+        return $content;
+    }
+
     function hook_render_article($article) {
         $site_url = $article["site_url"];
         $parts = parse_url($site_url);
@@ -44,29 +65,27 @@ class Douban extends Plugin {
 
             $content = trim(substr($article_content, 210, -19));
 
+            // $article["content"] = $article["content"] . "<pre>" . $content . "</pre>";
 
-            $constants = get_defined_constants(true);
-            $json_errors = array();
-            foreach ($constants["json"] as $name => $value) {
-                if (!strncmp($name, "JSON_ERROR_", 11)) {
-                    $json_errors[$value] = $name;
-                }
-            }
-
-for ($i = 0; $i <= 31; ++$i) { 
-    $content = str_replace(chr($i), "", $content); 
-}
-$content = str_replace(chr(127), "", $content);
-
-            $article["content"] = $article["content"] . "<pre>" . $content . "</pre>";
-
-            write_log($content . "\n\n");
+            // write_log($content . "\n\n");
 
             $feed = json_decode($content, true);
 
-            $article["content"] = $article["content"] . "<p>" . $json_errors[json_last_error()] . "</p>";
+            if (json_last_error() == JSON_ERROR_NONE) {
+                $article["content"] = $article["content"] . parse_feed($feed);
+            } else {
+                $constants = get_defined_constants(true);
+                $json_errors = array();
+                foreach ($constants["json"] as $name => $value) {
+                    if (!strncmp($name, "JSON_ERROR_", 11)) {
+                        $json_errors[$value] = $name;
+                    }
+                }
 
-            write_log($json_errors[json_last_error()] . "\n\n");
+                $article["content"] = $article["content"] . "<p>" . $json_errors[json_last_error()] . "</p>";
+            }
+
+            // write_log($json_errors[json_last_error()] . "\n\n");
 
             // if ($feed !== NULL) {
             //     $blocks = $feed["blocks"];
