@@ -6,6 +6,11 @@ function debug_to_console($article, $data ) {
     $article["content"] = $output ;
 }
 
+function write_log($log)
+{
+    file_put_contents('/tmp/php.log', $log, FILE_APPEND);
+}
+
 class Douban extends Plugin {
 
     private $host;
@@ -55,11 +60,13 @@ $content = str_replace(chr(127), "", $content);
 
             $article["content"] = $article["content"] . "<pre>" . $content . "</pre>";
 
+            write_log($content . "\n\n");
 
             $feed = json_decode($content, true);
 
             $article["content"] = $article["content"] . "<p>" . $json_errors[json_last_error()] . "</p>";
 
+            write_log($json_errors[json_last_error()] . "\n\n");
 
             // if ($feed !== NULL) {
             //     $blocks = $feed["blocks"];
