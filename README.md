@@ -1,6 +1,6 @@
 # tt-rss-douban
 
-A tt-rss plugin for douban rss
+A tt-rss plugin for douban group rss
 
 Work In Process
 
