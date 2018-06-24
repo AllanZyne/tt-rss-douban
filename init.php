@@ -2,7 +2,7 @@
 
 function write_log($log)
 {
-    file_put_contents('/tmp/php.log', $log, FILE_APPEND);
+    file_put_contents('/tmp/php_content.log', $log, FILE_APPEND);
 }
 
 class Douban extends Plugin {
@@ -19,7 +19,7 @@ class Douban extends Plugin {
     function init($host) {
         $this->host = $host;
 
-        // $host->add_hook($host::HOOK_ARTICLE_FILTER, $this);
+        $host->add_hook($host::HOOK_ARTICLE_FILTER, $this);
         $host->add_hook($host::HOOK_RENDER_ARTICLE, $this);
     }
 
@@ -46,6 +46,18 @@ class Douban extends Plugin {
         return $content;
     }
 
+    function hook_article_filter($article) {
+        $site_url = $article["feed"]["site_url"];
+        $parts = parse_url($site_url);
+
+        if ($parts["host"] == "www.douban.com") {
+            $content = $article["content"];
+            write_log($content . "\n\n");
+        }
+
+        return $article;
+    }
+
     function hook_render_article($article) {
         $site_url = $article["site_url"];
         $parts = parse_url($site_url);
@@ -53,9 +65,9 @@ class Douban extends Plugin {
         if ($parts["host"] == "www.douban.com") {
             //! delete <xhtml> headers and footers
             $content = trim(substr($article["content"], 210, -19));
-            
+
             // write_log($content . "\n\n");
-            
+
             $feed = json_decode($content, true);
 
             if (json_last_error() == JSON_ERROR_NONE) {
