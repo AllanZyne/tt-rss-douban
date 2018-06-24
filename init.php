@@ -51,8 +51,13 @@ class Douban extends Plugin {
         $parts = parse_url($site_url);
 
         if ($parts["host"] == "www.douban.com") {
-            $content = $article["content"];
+            $content = html_entity_decode(str_replace('"', '\\"', $article["content"]));
             write_log($content . "\n\n");
+
+            $feed = json_decode($content, true);
+            if (json_last_error() == JSON_ERROR_NONE) {
+                $article["content"] = $this->parse_feed($feed);
+            }
         }
 
         return $article;
