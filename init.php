@@ -1,9 +1,9 @@
 <?php
 
-function write_log($log)
-{
-    file_put_contents('/tmp/php_content.log', $log, FILE_APPEND);
-}
+// function write_log($log)
+// {
+//     file_put_contents('/tmp/php_content.log', $log, FILE_APPEND);
+// }
 
 class Douban extends Plugin {
 
@@ -98,7 +98,7 @@ class Douban extends Plugin {
         if ($parts["host"] == "www.douban.com") {
             $content = html_entity_decode(str_replace('"', '\\"', $article["content"]));
 
-            write_log($content . "\n\n");
+            // write_log($content . "\n\n");
 
             $feed = json_decode($content, true);
             if (json_last_error() == JSON_ERROR_NONE) {
@@ -108,36 +108,6 @@ class Douban extends Plugin {
 
         return $article;
     }
-
-    // function hook_render_article($article) {
-    //     $site_url = $article["site_url"];
-    //     $parts = parse_url($site_url);
-
-    //     if ($parts["host"] == "www.douban.com") {
-    //         //! delete <xhtml> headers and footers
-    //         $content = trim(substr($article["content"], 210, -19));
-
-    //         // write_log($content . "\n\n");
-
-    //         $feed = json_decode($content, true);
-
-    //         if (json_last_error() == JSON_ERROR_NONE) {
-    //             $article["content"] = $this->parse_feed($feed);
-    //         }/* else { 
-    //             $constants = get_defined_constants(true);
-    //             $json_errors = array();
-    //             foreach ($constants["json"] as $name => $value) {
-    //                 if (!strncmp($name, "JSON_ERROR_", 11)) {
-    //                     $json_errors[$value] = $name;
-    //                 }
-    //             }
-
-    //             $article["content"] = $article["content"] . "<p>" . $json_errors[json_last_error()] . "</p>";
-    //         }*/
-    //     }
-
-    //     return $article;
-    // }
 
     function api_version() {
         return 2;
